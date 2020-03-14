@@ -26,7 +26,6 @@ public class AuthroizeProvider {
             Response execute = client.newCall(request).execute();
             String response = execute.body().string();
             String accessToken = response.split(" ")[0].split("=")[1];
-            System.out.println(accessToken);
             return  accessToken;
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,9 +42,8 @@ public class AuthroizeProvider {
         try {
             Response response = client.newCall(request).execute();
             String respString = response.body().string();
-            System.out.println(respString);
             GithubUser githubUser = JSON.parseObject(respString,GithubUser.class);
-            System.out.println(githubUser);
+            return githubUser;
         } catch (IOException e) {
             e.printStackTrace();
         }
