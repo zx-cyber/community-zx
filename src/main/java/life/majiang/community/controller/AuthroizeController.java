@@ -1,6 +1,5 @@
 package life.majiang.community.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import life.majiang.community.DataTransferObject.AccessTokenDTO;
 import life.majiang.community.DataTransferObject.GithubUser;
 import life.majiang.community.mapper.UserMapper;
@@ -12,8 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -35,10 +37,14 @@ public class AuthroizeController {
     @Value("${github.redirect.uri}")
     private String redirectUri;
 
+    //这个路径是点登录的时候才会访问GitHub的一些路径，如果访问首页已经获取到用户，那么用户不会想去去点登录
+    //这个map不会执行，也就不会老是connect reset
     @GetMapping("/callback")
     public String callback(@RequestParam("code") String code,
                            @RequestParam("state") String state,
-                           HttpSession session){
+                           HttpServletRequest servletRequest,
+                           HttpServletResponse servletResponse){
+        //返回给浏览器的cookie在response中
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
         accessTokenDTO.setClient_secret(clientSecret);
@@ -49,22 +55,18 @@ public class AuthroizeController {
         GithubUser githubUser = authroizeProvider.getGithubUser(accessToken);
         // 获取到user之后，存入数据库
         if (githubUser!=null){
-            //查找数据库有无此account_id的记录，没有则插入
-            User dbUser = userMapper.findByAccountId(githubUser.getId());
-            if(dbUser==null){
-                User user = new User();
-                user.setAccountId(githubUser.getId());
-                user.setGmtCreate(System.currentTimeMillis());
-                user.setToken(UUID.randomUUID().toString());
-                user.setGmtModified(user.getGmtCreate());
-                user.setName(githubUser.getName());
-                userMapper.insert(user);
-            }else{
-                //有则更新
-                dbUser.setGmtModified(System.currentTimeMillis());
-                userMapper.updateByAccountId(dbUser);
-            }
-            session.setAttribute("user",githubUser);
+            User user = new User();
+            user.setAccountId(githubUser.getId());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setToken(UUID.randomUUID().toString());
+            user.setGmtModified(user.getGmtCreate());
+            user.setName(githubUser.getName());
+            userMapper.insert(user);
+            //加入cookie
+            servletResponse.addCookie(new Cookie("token",user.getToken()));
+            //更新同一用户所有记录
+            userMapper.updateByAccountId(user);
+            servletRequest.getSession().setAttribute("user",githubUser);
             return "redirect:/";
         }else{
             return "redirect:/";
