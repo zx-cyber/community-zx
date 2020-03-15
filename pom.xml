@@ -23,9 +23,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <!--用的这个模板引擎什么意思-->
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
@@ -33,6 +37,18 @@
             <artifactId>okhttp</artifactId>
             <!--果然版本有问题就不行-->
             <version>3.14.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+        </dependency>
+        <!--spring boot整合上mybaits-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

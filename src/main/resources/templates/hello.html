@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+<!--这个标签很重要？，命名空间，html检查不会出错-->
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>我的论坛</title>
@@ -28,11 +29,15 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <!--认证成功后会访问/callback controller，带着code、state参数-->
-                    <li><a href="https://github.com/login/oauth/authorize?client_id=ba24286d5b9eeda4784a&state=1&scope=user">登录</a></li>
-                    <li class="dropdown">
+                    <li th:if="${session.user == null}">
+                        <a href="https://github.com/login/oauth/authorize?client_id=ba24286d5b9eeda4784a&state=1&scope=user">登录</a>
+                    </li>
+                    <!--就两个li标签，一个是登录的一个是dropdown的-->
+                    <li class="dropdown" th:if="${session.user != null}">
+                        <!--a标签将span内容覆盖了，怎么办？ themyleaf版本问题？-->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-haspopup="true"
-                           aria-expanded="false">我的<span class="caret"></span></a>
+                           aria-expanded="false" th:utext="${session.user.getName()}"><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">消息中心</a></li>
                             <li><a href="#">个人资料</a></li>
