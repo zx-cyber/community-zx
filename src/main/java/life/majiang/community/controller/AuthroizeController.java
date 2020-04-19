@@ -59,6 +59,7 @@ public class AuthroizeController {
             user.setToken(UUID.randomUUID().toString());
             user.setGmtModified(user.getGmtCreate());
             user.setName(githubUser.getName());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             userMapper.insert(user);
             //加入cookie
             servletResponse.addCookie(new Cookie("token",user.getToken()));

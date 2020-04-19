@@ -19,10 +19,11 @@ public interface UserMapper {
 
     //自动调用model中的getter方法完成注入，所以可以直接写这个变量的属性，不用写user.gmtCreate
     @Insert("insert into user (account_id,name,gmt_create,gmt_modified," +
-            "token,) values (#{accountId},#{name},#{gmtCreate},#{gmtModified}," +
-            "#{token})")
+            "token,avatar_url) values (#{accountId},#{name},#{gmtCreate},#{gmtModified}," +
+            "#{token},#{avatarUrl})")
     void insert(User user);
 
+    //accountid是github账户的表示id，id是本表的记录标志
     @Select("SELECT * FROM user WHERE account_id = #{accountId}")
     List<User> findByAccountId(String accountId);
 
@@ -33,4 +34,7 @@ public interface UserMapper {
 
     @Select("select * from user where token=#{token}")
     User findByToken(String token);
+
+    @Select("select * from user where id=#{creator}")
+    User queryById(Integer creator);
 }
