@@ -4,10 +4,10 @@
 <head>
     <title>我的论坛</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
-    <script src="js/jQuery3.4.1" type="application/javascript"></script>
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <script src="/js/jQuery3.4.1" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 
 </head>
 <body>
@@ -31,6 +31,9 @@
                     <!--认证成功后会访问/callback controller，带着code、state参数-->
                     <li th:if="${session.user == null}">
                         <a href="https://github.com/login/oauth/authorize?client_id=ba24286d5b9eeda4784a&state=1&scope=user">登录</a>
+                    </li>
+                    <li th:if="${session.user != null}">
+                        <a href="/publish">发布</a>
                     </li>
                     <!--就两个li标签，一个是登录的一个是dropdown的-->
                     <li class="dropdown" th:if="${session.user != null}">

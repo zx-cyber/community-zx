@@ -3,19 +3,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>发布问题</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/mycss.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
-    <script src="js/jQuery3.4.1" type="application/javascript"></script>
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/mycss.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
+    <script src="/js/jQuery3.4.1" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 
 </head>
 <body>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">我的论坛</span>
             </button>
             <a class="navbar-brand" href="#">我的论坛</a>
@@ -32,6 +33,9 @@
                 <!--认证成功后会访问/callback controller，带着code、state参数-->
                 <li th:if="${session.user == null}">
                     <a href="https://github.com/login/oauth/authorize?client_id=ba24286d5b9eeda4784a&state=1&scope=user">登录</a>
+                </li>
+                <li th:if="${session.user != null}">
+                    <a href="/publish">发布</a>
                 </li>
                 <!--就两个li标签，一个是登录的一个是dropdown的-->
                 <li class="dropdown" th:if="${session.user != null}">
@@ -54,23 +58,39 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h3><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>发起问题</h3>
             <hr>
-            <form action="" >
+            <form action="/publish/question" method="post">
                 <div class="form-group">
                     <label for="title">问题标题</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="请输入标题">
+                    <input type="text" class="form-control" th:value="${title}" id="title" name="title"
+                           placeholder="请输入标题">
                 </div>
                 <div class="form-group">
                     <label for="title">问题补充</label>
-                    <textarea name="description" id="descriptioin" class="form-control" cols="30" rows="10"></textarea>
+                    <textarea name="description" id="description" th:text="${description}" class="form-control"
+                              cols="30" rows="10"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="title">添加标签</label>
-                    <input type="text" class="form-control" id="tag" name="tag" placeholder="请输入标签，以逗号分隔">
+                    <input type="text" class="form-control" id="tag" th:value="${tag}" name="tag"
+                           placeholder="请输入标签，以逗号分隔">
                 </div>
-                <button type="submit" class="btn btn-success btn-publish">发布</button>
+                <div class="container-fluid main">
+                    <div class="row">
+                        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 ">
+                            <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                                 th:text="${error}"
+                                 th:if="${error != null}">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                            <button type="submit" class=" btn btn-success btn-publish">发布
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>问题发起指南</h3>
             问题标题：请用简洁的语言描述您的问题，不超过25字 <br>
             问题补充：详细补充您的问题，并确保问题描述清晰直观，并提供一些相关的资料 <br>
