@@ -37,4 +37,7 @@ public interface UserMapper {
 
     @Select("select * from user where id=#{creator}")
     User queryById(Integer creator);
+
+    @Select("select count(1) from question")
+    Integer count();
 }

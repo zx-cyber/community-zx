@@ -1,6 +1,6 @@
 package life.majiang.community.controller;
 
-import life.majiang.community.DataTransferObject.QuestionDTO;
+import life.majiang.community.DataTransferObject.PaginationDTO;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.User;
 import life.majiang.community.service.QuestionService;
@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @Controller
 public class HelloController {
@@ -23,7 +23,8 @@ public class HelloController {
     //访问这个根目录的时候就会访问主页，每次访问主页的时候去校验登录状态，就不用点登录了，这样的
     @GetMapping("/")
     public String hello(HttpServletRequest servletRequest,
-                        Model model){
+                        Model model, @RequestParam(name = "page",defaultValue = "1")Integer page,
+                        @RequestParam(name = "size",defaultValue = "2")Integer size){
         //response返回浏览器去写cookie的值，request是拿到携带的cookie，有一个内建的对象在框架里了
         //就是HttpServletRequest
         Cookie[] cookies = servletRequest.getCookies();
@@ -45,8 +46,8 @@ public class HelloController {
                 }
             }
         }
-        List<QuestionDTO> questions = questionService.queryQuestions();
-        model.addAttribute("questions",questions);
+        PaginationDTO paginationDTO = questionService.queryQuestions(page,size);
+        model.addAttribute("pagination",paginationDTO);
         return "hello";
     }
 }
